@@ -141,6 +141,7 @@ nav {
      grid-template-columns: 1fr auto;
      align-items: end;
      gap: 40px;
+     margin: 0 auto;
 }
 
 .hero-badge {
@@ -985,9 +986,12 @@ canvas {
 }
 
 /* ── DOCUMENTS PAGE ──────────────────────────────── */
+#page-documents .section-hero {
+     width: 90%;
+}
 
 .docs-section {
-     max-width: 900px;
+     max-width: 1000px;
      margin: 40px auto;
 }
 
