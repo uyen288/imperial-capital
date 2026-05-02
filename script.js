@@ -63,14 +63,14 @@ function initChart() {
      if (chartInited) return;
      chartInited = true;
 
-     const labels = generateMonths('2026-01-01', 3);
+     const labels = generateMonths('2026-01-01', 4);
 
      const imp = [
-          -5.13, 5.34, 2.58
+          -5.13, 5.34, 2.58, 3.02
      ];
 
      const vni = [
-          2.50, 2.80, -10.95
+          2.50, 2.80, -10.95, 10.70
      ];
 
      const ctx = document.getElementById('growthChart').getContext('2d');
@@ -156,19 +156,19 @@ const COLORS = {
 
 const data = {
      sector: [
-          { name: "Y tế", value: 35.97, color: COLORS.accent },
-          { name: "Hàng cá nhân & Gia dụng", value: 30.27, color: COLORS.dark },
+          { name: "Y tế", value: 40.4, color: COLORS.accent },
+          { name: "Hàng cá nhân & Gia dụng", value: 30.3, color: COLORS.dark },
 
-          { name: "Tài nguyên cơ bản", value: 12.49, color: COLORS.gray },
-          { name: "Bất động sản", value: 8.18, color: COLORS.lightGray },
-          { name: "Dịch vụ tài chính", value: 4.75, color: COLORS.lightGray },
+          { name: "Bất động sản", value: 9.0, color: COLORS.gray },
+          { name: "Tài nguyên cơ bản", value: 7.4, color: COLORS.lightGray },
+          { name: "Dịch vụ tài chính", value: 4.9, color: COLORS.lightGray },
 
-          { name: "Hóa chất", value: 3.36, color: COLORS.border },
-          { name: "Truyền thông", value: 1.65, color: COLORS.border },
-          { name: "Điện, nước & Xăng dầu khí đốt", value: 1.44, color: COLORS.border },
-          { name: "Ngân hàng", value: 1.34, color: COLORS.border },
-          { name: "Xây dựng & Vật liệu", value: 0.28, color: COLORS.border },
-          { name: "Hàng & Dịch vụ công nghiệp", value: 0.26, color: COLORS.border }
+          { name: "Hóa chất", value: 3.3, color: COLORS.border },
+          { name: "Truyền thông", value: 1.6, color: COLORS.border },
+          { name: "Điện, nước & Xăng dầu khí đốt", value: 1.4, color: COLORS.border },
+          { name: "Ngân hàng", value: 1.2, color: COLORS.border },
+          { name: "Xây dựng & Vật liệu", value: 0.3, color: COLORS.border },
+          { name: "Hàng & Dịch vụ công nghiệp", value: 0.3, color: COLORS.border }
      ],
 
      asset: [
