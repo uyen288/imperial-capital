@@ -1086,7 +1086,7 @@ canvas {
 /* ── FOOTER ──────────────────────────────────────── */
 footer {
      border-top: 1px solid var(--gray-200);
-     padding: 40px 48px;
+     padding: 40px 0;
      display: grid;
      grid-template-columns: 1fr auto;
      gap: 40px;
@@ -1108,6 +1108,8 @@ footer {
 
 .footer-links {
      display: flex;
+     flex-direction: column;
+     text-align: end;
      gap: 10px;
 }
 
@@ -1122,5 +1124,5 @@ footer {
 }
 
 .footer-links a:hover {
-     color: var(--color-black);
+     color: var(--color-accent);
 }
