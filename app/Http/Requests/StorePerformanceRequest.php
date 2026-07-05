@@ -6,28 +6,34 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StorePerformanceRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     */
     public function rules(): array
     {
-        return [
+        return array_merge($this->baseRules(), [
             'fund_id' => 'required|exists:funds,id',
-            'date' => 'required|date',
-            'nav' => 'nullable|numeric',
-            'one_month' => 'nullable|numeric',
-            'three_month' => 'nullable|numeric',
-            'one_year' => 'nullable|numeric',
-            'three_year' => 'nullable|numeric',
-            'ytd' => 'nullable|numeric',
-        ];
+            'date'    => 'required|date',
+        ]);
+    }
+
+    /**
+     * Shared numeric rules for fund + all benchmarks.
+     */
+    public static function baseRules(): array
+    {
+        $prefixes = ['', 'vn_index_', 'dcds_', 'vesaf_'];
+        $fields   = ['nav', 'one_month', 'three_month', 'one_year', 'three_year', 'ytd'];
+        $rules    = [];
+
+        foreach ($prefixes as $prefix) {
+            foreach ($fields as $field) {
+                $rules[$prefix . $field] = 'nullable|numeric';
+            }
+        }
+
+        return $rules;
     }
 }

@@ -62,13 +62,20 @@
                          @csrf
 
                          <button
-                              class="border border-gray-900 px-5 py-2 text-xs font-semibold uppercase tracking-widest text-gray-900 transition hover:border-red-700 hover:bg-red-700 hover:text-white">
+                              class="bg-red-600 px-5 py-2 text-xs font-semibold uppercase tracking-widest text-white transition hover:border-red-700 hover:bg-red-700 hover:text-white">
 
                               Logout
 
                          </button>
 
                     </form>
+
+                    <a href="{{ route('admin.dashboard') }}"
+                         class="border border-red-900 px-5 py-2 text-xs font-semibold uppercase tracking-widest text-gray-900 transition hover:border-red-700 hover:bg-red-700 hover:text-white">
+
+                         Dashboard
+
+                    </a>
 
                @endauth
 

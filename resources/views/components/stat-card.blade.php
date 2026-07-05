@@ -1,10 +1,10 @@
-<div class="p-10">
+<div class="p-10 border-r border-y border-gray-300 last:border-r-0">
 
-    <p class="text-xs font-semibold uppercase tracking-[0.15em] text-red-600">
+    <p class="text-[14px] font-semibold uppercase tracking-[0.15em] text-red-600">
         {{ $label }}
     </p>
 
-    <p class="mt-1 text-sm text-gray-400">
+    <p class="mt-1 text-[14px] text-gray-400">
         {{ $date }}
     </p>
 

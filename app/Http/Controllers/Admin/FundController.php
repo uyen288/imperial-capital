@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreFundRequest;
 use App\Http\Requests\UpdateFundRequest;
 use App\Models\Fund;
+use Illuminate\Support\Str;
 
 class FundController extends Controller
 {
@@ -32,7 +33,10 @@ class FundController extends Controller
      */
     public function store(StoreFundRequest $request)
     {
-        Fund::create($request->validated());
+        $data = $request->validated();
+        $data['slug'] = $this->generateUniqueSlug($data['name']);
+
+        Fund::create($data);
 
         return redirect()
             ->route('admin.funds.index')
@@ -52,7 +56,14 @@ class FundController extends Controller
      */
     public function update(UpdateFundRequest $request, Fund $fund)
     {
-        $fund->update($request->validated());
+        $data = $request->validated();
+
+        // Regenerate slug only if name changed
+        if ($data['name'] !== $fund->name) {
+            $data['slug'] = $this->generateUniqueSlug($data['name'], $fund->id);
+        }
+
+        $fund->update($data);
 
         return redirect()
             ->route('admin.funds.index')
@@ -69,5 +80,25 @@ class FundController extends Controller
         return redirect()
             ->route('admin.funds.index')
             ->with('success', 'Fund deleted successfully.');
+    }
+
+    /**
+     * Generate a unique slug from a given name.
+     */
+    private function generateUniqueSlug(string $name, ?int $excludeId = null): string
+    {
+        $base = Str::slug($name);
+        $slug = $base;
+        $counter = 1;
+
+        while (
+            Fund::where('slug', $slug)
+                ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
+                ->exists()
+        ) {
+            $slug = $base . '-' . $counter++;
+        }
+
+        return $slug;
     }
 }

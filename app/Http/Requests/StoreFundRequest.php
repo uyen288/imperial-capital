@@ -22,24 +22,23 @@ class StoreFundRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'short_name' => 'nullable|string|max:255',
-            'slug' => 'required|string|max:255|unique:funds,slug',
-            'short_description' => 'nullable|string',
-            'description' => 'nullable|string',
-            'strategy' => 'nullable|string',
-            'objective' => 'nullable|string',
+
+            'inception_date' => 'nullable|date',
+
             'nav' => 'nullable|numeric',
             'ytd_return' => 'nullable|numeric',
             'five_year_return' => 'nullable|numeric',
-            'inception_date' => 'nullable|date',
-            'latest_report' => 'nullable|string|max:255',
+
             'fund_objective' => 'nullable|string',
             'investment_strategy' => 'nullable|string',
-            'founded_date' => 'nullable|date',
+
             'asset_class' => 'nullable|string|max:255',
             'fund_type' => 'nullable|string|max:255',
-            'suggestion_investion_time' => 'nullable|string|max:255',
+            'strategy' => 'nullable|string',
+            'suggested_investment_time' => 'nullable|string|max:255',
             'subscription_fee' => 'nullable|string|max:255',
             'management_fee' => 'nullable|string|max:255',
+
             'status' => 'boolean',
         ];
     }

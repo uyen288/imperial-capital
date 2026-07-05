@@ -33,6 +33,26 @@ class FundController extends Controller
             }
         ]);
 
-        return view('funds.show', compact('fund'));
+        // Sector breakdown for donut chart
+        $sectorData = $fund->portfolios
+            ->groupBy('sector')
+            ->map(fn($items) => [
+                'name'  => $items->first()->sector ?? 'Khác',
+                'value' => round($items->sum('weight'), 2),
+            ])
+            ->sortByDesc('value')
+            ->values();
+
+        // Asset-type breakdown for donut chart
+        $assetData = $fund->portfolios
+            ->groupBy('asset_type')
+            ->map(fn($items) => [
+                'name'  => $items->first()->asset_type ?? 'Khác',
+                'value' => round($items->sum('weight'), 2),
+            ])
+            ->sortByDesc('value')
+            ->values();
+
+        return view('funds.show', compact('fund', 'sectorData', 'assetData'));
     }
 }

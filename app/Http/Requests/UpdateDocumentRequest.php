@@ -22,7 +22,7 @@ class UpdateDocumentRequest extends FormRequest
         return [
             'fund_id' => 'required|exists:funds,id',
             'title' => 'required|string|max:255',
-            'category' => 'required|in:Factsheet,Monthly Report,Prospectus,Charter',
+            'category' => 'required|in:monthly,factsheet,prospectus,other',
             'file' => 'nullable|file|mimes:pdf|max:20480',
             'publish_date' => 'required|date',
         ];

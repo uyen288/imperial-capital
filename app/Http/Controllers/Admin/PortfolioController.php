@@ -20,6 +20,36 @@ class PortfolioController extends Controller
         return view('admin.portfolios.index', compact('portfolios'));
     }
 
+    public function show(Fund $fund)
+    {
+        $holdings = $fund->portfolios()
+            ->orderByDesc('weight')
+            ->get();
+
+        $sectorData = $holdings
+            ->groupBy('sector')
+            ->map(fn($items) => [
+                'name' => $items->first()->sector,
+                'value' => round($items->sum('weight'), 2),
+            ])
+            ->values();
+
+        $assetData = $holdings
+            ->groupBy('asset_type')
+            ->map(fn($items) => [
+                'name' => $items->first()->asset_type,
+                'value' => round($items->sum('weight'), 2),
+            ])
+            ->values();
+
+        return view('funds.show', compact(
+            'fund',
+            'holdings',
+            'sectorData',
+            'assetData'
+        ));
+    }
+
     /**
      * Show the form for creating a new resource.
      */
