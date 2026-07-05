@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Fund extends Model
 {
@@ -10,17 +11,64 @@ class Fund extends Model
         'name',
         'short_name',
         'slug',
+        'short_description',
+        'description',
+        'strategy',
+        'objective',
+        'nav',
+        'ytd_return',
+        'five_year_return',
+        'inception_date',
+        'latest_report',
         'fund_objective',
         'investment_strategy',
         'founded_date',
         'asset_class',
         'fund_type',
-        'strategy',
         'suggestion_investion_time',
         'subscription_fee',
         'management_fee',
-        'status'
+        'status',
     ];
 
-    
+    protected $casts = [
+        'nav' => 'decimal:2',
+        'ytd_return' => 'decimal:2',
+        'five_year_return' => 'decimal:2',
+        'inception_date' => 'date',
+        'founded_date' => 'date',
+        'status' => 'boolean',
+    ];
+
+    /**
+     * Get the route key for the model.
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
+    /**
+     * Get the performances for the fund.
+     */
+    public function performances(): HasMany
+    {
+        return $this->hasMany(Performance::class);
+    }
+
+    /**
+     * Get the portfolios for the fund.
+     */
+    public function portfolios(): HasMany
+    {
+        return $this->hasMany(Portfolio::class);
+    }
+
+    /**
+     * Get the documents for the fund.
+     */
+    public function documents(): HasMany
+    {
+        return $this->hasMany(Document::class);
+    }
 }

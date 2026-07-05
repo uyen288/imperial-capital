@@ -15,20 +15,29 @@ return new class extends Migration
             $table->id();
 
             $table->string('name');
-            $table->string('short_name')->nullable(true);
+            $table->string('short_name')->nullable();
             $table->string('slug')->unique();
 
-            $table->string('fund_objective')->nullable(true);
-            $table->string('investment_strategy')->nullable(true);
+            // AGENT.md columns
+            $table->text('short_description')->nullable();
+            $table->text('description')->nullable();
+            $table->text('strategy')->nullable();
+            $table->text('objective')->nullable();
+            $table->decimal('nav', 15, 2)->nullable();
+            $table->decimal('ytd_return', 8, 2)->nullable();
+            $table->decimal('five_year_return', 8, 2)->nullable();
+            $table->date('inception_date')->nullable();
+            $table->string('latest_report')->nullable();
 
-            $table->date('founded_date');
-
-            $table->string('asset_class');
-            $table->string('fund_type');
-            $table->string('strategy');
-            $table->string('suggestion_investion_time');
-            $table->string('subscription_fee');
-            $table->string('management_fee');
+            // Existing custom columns
+            $table->text('fund_objective')->nullable();
+            $table->text('investment_strategy')->nullable();
+            $table->date('founded_date')->nullable();
+            $table->string('asset_class')->nullable();
+            $table->string('fund_type')->nullable();
+            $table->string('suggestion_investion_time')->nullable();
+            $table->string('subscription_fee')->nullable();
+            $table->string('management_fee')->nullable();
 
             $table->boolean('status')->default(true);
 

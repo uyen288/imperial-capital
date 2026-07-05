@@ -2,66 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Fund;
 
 class FundController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of all funds.
      */
     public function index()
     {
-        $funds = Fund::all();
+        $funds = Fund::where('status', true)->get();
 
-        return view('index', compact('funds'));
+        return view('funds.index', compact('funds'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Display the specified fund.
      */
-    public function create()
+    public function show(Fund $fund)
     {
-        //
-    }
+        $fund->load([
+            'performances' => function ($query) {
+                $query->orderBy('date', 'desc');
+            },
+            'portfolios' => function ($query) {
+                $query->orderBy('weight', 'desc');
+            },
+            'documents' => function ($query) {
+                $query->orderBy('publish_date', 'desc');
+            }
+        ]);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return view('funds.show', compact('fund'));
     }
 }
