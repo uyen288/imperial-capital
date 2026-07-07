@@ -21,14 +21,19 @@
                 <div class="self-end mb-5">
                     @php
                         $latestDoc = $fund->documents->sortByDesc('publish_date')->first();
+                        $hasFile = $latestDoc && $latestDoc->files && $latestDoc->files->last();
                     @endphp
 
-                    @if($latestDoc)
-                        <a href="{{ ($latestDoc->files && $latestDoc->files->last()) ? asset('storage/' . $latestDoc->files->last()) : '#' }}"
-                            target="_blank"
+                    @if($hasFile)
+                        <a href="{{ asset('storage/' . $latestDoc->files->last()) }}" target="_blank"
                             class="inline-block text-[11px] uppercase tracking-widest text-[var(--color-red)] font-bold no-underline border-b border-[var(--color-red)] pb-1 text-right transition duration-300 ease-in-out hover:-translate-y-1">
                             Tải xuống {{ $latestDoc->title }} →
                         </a>
+                    @elseif($latestDoc)
+                        <span
+                            class="inline-block text-[11px] uppercase tracking-widest text-gray-400 font-bold border-b border-gray-300 pb-1 text-right-thông-báo">
+                            {{ $latestDoc->title }} (Chưa có file)
+                        </span>
                     @endif
                 </div>
             </div>
