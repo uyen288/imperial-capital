@@ -21,19 +21,13 @@
                 <div class="self-end mb-5">
                     @php
                         $latestDoc = $fund->documents->sortByDesc('publish_date')->first();
-                        $hasFile = $latestDoc && $latestDoc->files && $latestDoc->files->last();
                     @endphp
 
-                    @if($hasFile)
+                    @if($latestDoc)
                         <a href="{{ asset('storage/' . $latestDoc->files->last()) }}" target="_blank"
                             class="inline-block text-[11px] uppercase tracking-widest text-[var(--color-red)] font-bold no-underline border-b border-[var(--color-red)] pb-1 text-right transition duration-300 ease-in-out hover:-translate-y-1">
                             Tải xuống {{ $latestDoc->title }} →
                         </a>
-                    @elseif($latestDoc)
-                        <span
-                            class="inline-block text-[11px] uppercase tracking-widest text-gray-400 font-bold border-b border-gray-300 pb-1 text-right-thông-báo">
-                            {{ $latestDoc->title }} (Chưa có file)
-                        </span>
                     @endif
                 </div>
             </div>
@@ -112,7 +106,7 @@
                         <div class="mt-10 flex flex-col gap-8">
 
                             <div class="flex items-center gap-5 border-b border-gray-200 last:border-b-0 pb-5">
-                                <img src="/storage/images/ql.jpg" class="h-20 w-20 rounded-full object-cover">
+                                <img src="{{ asset('images/ql.jpg') }}" class="h-20 w-20 rounded-full object-cover">
 
                                 <div class="flex-1">
                                     <div class="mb-1.5 flex items-center gap-3">
