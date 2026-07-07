@@ -13,27 +13,26 @@ class StorePerformanceRequest extends FormRequest
 
     public function rules(): array
     {
-        return array_merge($this->baseRules(), [
-            'fund_id' => 'required|exists:funds,id',
-            'date'    => 'required|date',
-        ]);
-    }
+        return [
+            // Performance chính
+            'fund_id'     => 'required|exists:funds,id',
+            'date'        => 'required|date',
+            'nav'         => 'nullable|numeric',
+            'one_month'   => 'nullable|numeric',
+            'three_month' => 'nullable|numeric',
+            'one_year'    => 'nullable|numeric',
+            'three_year'  => 'nullable|numeric',
+            'ytd'         => 'nullable|numeric',
 
-    /**
-     * Shared numeric rules for fund + all benchmarks.
-     */
-    public static function baseRules(): array
-    {
-        $prefixes = ['', 'vn_index_', 'dcds_', 'vesaf_'];
-        $fields   = ['nav', 'one_month', 'three_month', 'one_year', 'three_year', 'ytd'];
-        $rules    = [];
-
-        foreach ($prefixes as $prefix) {
-            foreach ($fields as $field) {
-                $rules[$prefix . $field] = 'nullable|numeric';
-            }
-        }
-
-        return $rules;
+            // Benchmark data (dynamic array, keyed by benchmark_id)
+            'benchmarks'                => 'nullable|array',
+            'benchmarks.*.benchmark_id' => 'required|exists:benchmarks,id',
+            'benchmarks.*.nav'          => 'nullable|numeric',
+            'benchmarks.*.one_month'    => 'nullable|numeric',
+            'benchmarks.*.three_month'  => 'nullable|numeric',
+            'benchmarks.*.one_year'     => 'nullable|numeric',
+            'benchmarks.*.three_year'   => 'nullable|numeric',
+            'benchmarks.*.ytd'          => 'nullable|numeric',
+        ];
     }
 }

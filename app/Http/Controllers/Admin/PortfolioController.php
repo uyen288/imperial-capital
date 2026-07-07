@@ -23,6 +23,8 @@ class PortfolioController extends Controller
     public function show(Fund $fund)
     {
         $holdings = $fund->portfolios()
+            ->whereNotNull('company_name')
+            ->where('company_name', '<>', '')
             ->orderByDesc('weight')
             ->get();
 

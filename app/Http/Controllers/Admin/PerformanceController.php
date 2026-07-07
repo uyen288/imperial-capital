@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePerformanceRequest;
 use App\Http\Requests\UpdatePerformanceRequest;
+use App\Models\Benchmark;
+use App\Models\BenchmarkPerformance;
 use App\Models\Fund;
 use App\Models\Performance;
 
@@ -25,7 +27,7 @@ class PerformanceController extends Controller
      */
     public function create()
     {
-        $funds = Fund::orderBy('name')->get();
+        $funds = Fund::with('benchmarks')->orderBy('name')->get();
 
         return view('admin.performances.create', compact('funds'));
     }
@@ -35,7 +37,16 @@ class PerformanceController extends Controller
      */
     public function store(StorePerformanceRequest $request)
     {
-        Performance::create($request->validated());
+        $validated = $request->validated();
+
+        // Tách benchmark data ra trước khi tạo Performance
+        $benchmarksData = $validated['benchmarks'] ?? [];
+        unset($validated['benchmarks']);
+
+        $performance = Performance::create($validated);
+
+        // Lưu dữ liệu benchmark vào bảng riêng
+        $this->syncBenchmarkPerformances($performance, $benchmarksData);
 
         return redirect()
             ->route('admin.performances.index')
@@ -47,9 +58,15 @@ class PerformanceController extends Controller
      */
     public function edit(Performance $performance)
     {
-        $funds = Fund::orderBy('name')->get();
+        $funds = Fund::with('benchmarks')->orderBy('name')->get();
 
-        return view('admin.performances.edit', compact('performance', 'funds'));
+        // Load benchmark data hiện có của kỳ này (keyed by benchmark_id)
+        $existingBenchmarkData = $performance
+            ->benchmarkPerformances()
+            ->get()
+            ->keyBy('benchmark_id');
+
+        return view('admin.performances.edit', compact('performance', 'funds', 'existingBenchmarkData'));
     }
 
     /**
@@ -57,7 +74,14 @@ class PerformanceController extends Controller
      */
     public function update(UpdatePerformanceRequest $request, Performance $performance)
     {
-        $performance->update($request->validated());
+        $validated = $request->validated();
+
+        $benchmarksData = $validated['benchmarks'] ?? [];
+        unset($validated['benchmarks']);
+
+        $performance->update($validated);
+
+        $this->syncBenchmarkPerformances($performance, $benchmarksData);
 
         return redirect()
             ->route('admin.performances.index')
@@ -75,4 +99,36 @@ class PerformanceController extends Controller
             ->route('admin.performances.index')
             ->with('success', 'Performance record deleted successfully.');
     }
+
+    /**
+     * Upsert dữ liệu benchmark cho 1 performance record.
+     *
+     * @param  Performance  $performance
+     * @param  array        $benchmarksData   Mảng benchmark từ form: [['benchmark_id'=>1,'nav'=>...], ...]
+     */
+    private function syncBenchmarkPerformances(Performance $performance, array $benchmarksData): void
+    {
+        foreach ($benchmarksData as $bData) {
+            $benchmarkId = $bData['benchmark_id'] ?? null;
+            if (! $benchmarkId) {
+                continue;
+            }
+
+            BenchmarkPerformance::updateOrCreate(
+                [
+                    'benchmark_id'  => $benchmarkId,
+                    'performance_id' => $performance->id,
+                ],
+                [
+                    'nav'         => $bData['nav'] ?? null,
+                    'one_month'   => $bData['one_month'] ?? null,
+                    'three_month' => $bData['three_month'] ?? null,
+                    'one_year'    => $bData['one_year'] ?? null,
+                    'three_year'  => $bData['three_year'] ?? null,
+                    'ytd'         => $bData['ytd'] ?? null,
+                ]
+            );
+        }
+    }
 }
+

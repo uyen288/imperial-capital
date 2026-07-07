@@ -22,8 +22,10 @@ class FundController extends Controller
     public function show(Fund $fund)
     {
         $fund->load([
+            'benchmarks',
             'performances' => function ($query) {
-                $query->orderBy('date', 'desc');
+                $query->orderBy('date', 'desc')
+                      ->with(['benchmarkPerformances.benchmark']);
             },
             'portfolios' => function ($query) {
                 $query->orderBy('weight', 'desc');

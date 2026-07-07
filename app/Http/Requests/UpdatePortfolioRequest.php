@@ -21,7 +21,7 @@ class UpdatePortfolioRequest extends FormRequest
     {
         return [
             'fund_id' => 'required|exists:funds,id',
-            'company_name' => 'required|string|max:255',
+            'company_name' => 'nullable|string|max:255',
             'ticker' => 'required|string|max:50',
             'sector' => 'nullable|string|max:255',
             'weight' => 'nullable|numeric|min:0|max:100',

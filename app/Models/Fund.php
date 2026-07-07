@@ -71,4 +71,13 @@ class Fund extends Model
     {
         return $this->hasMany(Document::class);
     }
+
+    /**
+     * Các chỉ số tham chiếu (benchmark) được cấu hình cho quỹ này.
+     * Ví dụ: VN-Index cho quỹ cổ phiếu, BTC cho quỹ crypto.
+     */
+    public function benchmarks(): HasMany
+    {
+        return $this->hasMany(Benchmark::class)->orderBy('display_order');
+    }
 }

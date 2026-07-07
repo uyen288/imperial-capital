@@ -20,9 +20,14 @@ Route::resource('funds', FundController::class)->only([
     'show'
 ]);
 
+// Temporary: delete in future
+Route::get('funds/{slug}/nav-history', function ($slug) {
+    return view('funds.nav-history');
+})->name('funds.nav-history')->where('slug', 'imperial-capital');
+
 // ─── Authentication Routes ──────────────────────────────────────────────────────
 
-Route::middleware('guest')->group(function() {
+Route::middleware('guest')->group(function () {
     Route::get('login', function () {
         return view('auth.login');
     })->name('login');
@@ -30,7 +35,7 @@ Route::middleware('guest')->group(function() {
     Route::post('login', [LoginController::class, 'store']);
 });
 
-Route::middleware('auth')->group(function() {
+Route::middleware('auth')->group(function () {
     Route::post('logout', [LoginController::class, 'destroy'])->name('logout');
 });
 

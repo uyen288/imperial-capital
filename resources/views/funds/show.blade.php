@@ -3,27 +3,47 @@
     {{-- Fund Header --}}
     <section class="border-b border-gray-200 bg-white">
         <div class="mx-auto max-w-7xl px-6 py-12 lg:px-10">
-            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-red-600">Đầu tư giá trị</p>
-            <h1 class="mt-2 text-[70px] font-bold text-gray-900" style="font-family: var(--font-display);">
-                {{ $fund->name }}
-            </h1>
-            <p class="max-w-3xl text-gray-500">
-                Imperial Capital tập trung vào các doanh nghiệp vốn hoá nhỏ bị thị trường định giá sai do thiếu thanh
-                khoản hoặc bị bỏ quên, tái cấu trúc với biên an toàn lớn, đồng thời có catalyst rõ ràng giúp thu hẹp
-                khoảng cách giữa giá thị trường và giá trị nội tại trong 6-18 tháng.
-            </p>
+            <div class="flex">
+                <div class="w-full flex-1">
+                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-red)]">Đầu tư giá trị
+                    </p>
+                    <h1 class="text-[70px] font-bold text-gray-900" style="font-family: var(--font-display);">
+                        {{ $fund->name }}
+                    </h1>
+                    <p class="max-w-3xl text-gray-500">
+                        Imperial Capital tập trung vào các doanh nghiệp vốn hoá nhỏ bị thị trường định giá sai do thiếu
+                        thanh
+                        khoản hoặc bị bỏ quên, tái cấu trúc với biên an toàn lớn, đồng thời có catalyst rõ ràng giúp thu
+                        hẹp
+                        khoảng cách giữa giá thị trường và giá trị nội tại trong 6-18 tháng.
+                    </p>
+                </div>
+                <div class="self-end mb-5">
+                    @php
+                        $latestDoc = $fund->documents->sortByDesc('publish_date')->first();
+                    @endphp
+
+                    @if($latestDoc)
+                        <a href="{{ ($latestDoc->files && $latestDoc->files->last()) ? asset('storage/' . $latestDoc->files->last()) : '#' }}"
+                            target="_blank"
+                            class="inline-block text-[11px] uppercase tracking-widest text-[var(--color-red)] font-bold no-underline border-b border-[var(--color-red)] pb-1 text-right transition duration-300 ease-in-out hover:-translate-y-1">
+                            Tải xuống {{ $latestDoc->title }} →
+                        </a>
+                    @endif
+                </div>
+            </div>
 
             {{-- Stats Bar --}}
             <div class="mt-8 grid grid-cols-2 sm:grid-cols-4">
-                <x-stat-card label="YTD Return" :date="'Tại ngày ' . $fund->updated_at?->format('d/m/Y') ?? '-'">
+                <x-stat-card label="Lợi nhuận từ đầu năm" :date="'Tại ngày ' . $fund->updated_at?->format('d/m/Y') ?? '-'">
                     <span
-                        class="text-3xl font-bold {{ ($fund->ytd_return ?? 0) >= 0 ? 'text-emerald-600' : 'text-red-600' }}">
+                        class="text-3xl font-bold {{ ($fund->ytd_return ?? 0) > 0 ? 'text-emerald-600' : 'text-gray-800' }}">
                         {{ $fund->ytd_return !== null ? ($fund->ytd_return >= 0 ? '+' : '') . $fund->ytd_return . '%' : '—' }}
                     </span>
                 </x-stat-card>
-                <x-stat-card label="5-Year Return" :date="'Tại ngày ' . $fund->updated_at?->format('d/m/Y') ?? '-'">
+                <x-stat-card label="Lợi nhuận 5 năm" :date="'Tại ngày ' . $fund->updated_at?->format('d/m/Y') ?? '-'">
                     <span
-                        class="text-3xl font-bold {{ ($fund->five_year_return ?? 0) >= 0 ? 'text-emerald-600' : 'text-red-600' }}">
+                        class="text-3xl font-bold {{ ($fund->five_year_return ?? 0) > 0 ? 'text-emerald-600' : 'text-gray-800' }}">
                         {{ $fund->five_year_return !== null ? ($fund->five_year_return >= 0 ? '+' : '') . $fund->five_year_return . '%' : '—' }}
                     </span>
                 </x-stat-card>
@@ -31,7 +51,7 @@
                     <span
                         class="text-3xl font-bold text-gray-900">{{ $fund->nav ? number_format($fund->nav, 2) : '—' }}</span>
                 </x-stat-card>
-                <x-stat-card label="Inception Date" :date="'-'">
+                <x-stat-card label="Ngày thành lập" :date="'-'">
                     <span class="text-3xl font-bold text-gray-900">
                         {{ ($fund->inception_date ?? $fund->founded_date)?->format('d/m/Y') ?? '—' }}
                     </span>
@@ -44,13 +64,17 @@
     <nav class="sticky top-20 z-30 border-b border-gray-200 bg-white/90 backdrop-blur-sm">
         <div class="mx-auto flex max-w-7xl gap-8 px-6 lg:px-10">
             <a href="#overview"
-                class="tab-link border-b-2 border-red-600 py-4 text-sm font-normal uppercase tracking-[0.15em] text-red-700">Overview</a>
+                class="tab-link border-b-2 border-[var(--color-red)] py-4 text-sm font-normal uppercase tracking-[0.15em] text-[var(--color-red)]">Tổng
+                quan</a>
             <a href="#performance"
-                class="tab-link border-b-2 border-transparent py-4 text-sm font-normal uppercase tracking-[0.15em] text-gray-500 hover:text-gray-900">Performance</a>
+                class="tab-link border-b-2 border-transparent py-4 text-sm font-normal uppercase tracking-[0.15em] text-gray-500 hover:text-gray-900">Hiệu
+                suất</a>
             <a href="#portfolio"
-                class="tab-link border-b-2 border-transparent py-4 text-sm font-normal uppercase tracking-[0.15em] text-gray-500 hover:text-gray-900">Portfolio</a>
+                class="tab-link border-b-2 border-transparent py-4 text-sm font-normal uppercase tracking-[0.15em] text-gray-500 hover:text-gray-900">Danh
+                mục</a>
             <a href="#documents"
-                class="tab-link border-b-2 border-transparent py-4 text-sm font-normal uppercase tracking-[0.15em] text-gray-500 hover:text-gray-900">Documents</a>
+                class="tab-link border-b-2 border-transparent py-4 text-sm font-normal uppercase tracking-[0.15em] text-gray-500 hover:text-gray-900">Tài
+                liệu</a>
         </div>
     </nav>
 
@@ -58,12 +82,12 @@
 
         {{-- Overview Section --}}
         <section id="overview" class="scroll-mt-40 pb-16">
-            <h2 class="text-[40px] font-bold text-gray-900" style="font-family: var(--font-display);">Overview</h2>
+            <h2 class="text-[40px] font-bold text-gray-900" style="font-family: var(--font-display);">Tổng quan</h2>
             <div class="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-[6fr_4fr]">
                 <div class="space-y-6">
                     @if($fund->fund_objective ?? '')
                         <div>
-                            <h3 class="font-semibold uppercase tracking-wider text-gray-400">Fund Objective</h3>
+                            <h3 class="font-semibold uppercase tracking-wider text-gray-400">Mục tiêu quỹ</h3>
                             <p class="mt-2 leading-relaxed text-gray-700">
                                 {{ $fund->fund_objective ?? '' }}
                             </p>
@@ -71,27 +95,46 @@
                     @endif
                     @if($fund->investment_strategy ?? '')
                         <div>
-                            <h3 class="font-semibold uppercase tracking-wider text-gray-400">Investment Strategy
-                            </h3>
+                            <h3 class="font-semibold uppercase tracking-wider text-gray-400">Chiến lược đầu tư</h3>
                             <p class="mt-2 leading-relaxed text-gray-700">
                                 {{ $fund->investment_strategy ?? '' }}
                             </p>
                         </div>
                     @endif
+                    <section class="manager-section">
+                        <h3 class="font-semibold uppercase tracking-wider text-gray-400">Đội ngũ quản lý</h3>
+
+                        <div class="mt-10 flex flex-col gap-8">
+
+                            <div class="flex items-center gap-5 border-b border-gray-200 last:border-b-0 pb-5">
+                                <img src="/storage/images/ql.jpg" class="h-20 w-20 rounded-full object-cover">
+
+                                <div class="flex-1">
+                                    <div class="mb-1.5 flex items-center gap-3">
+                                        <h3 class="m-0 text-lg font-bold text-[var(--color-accent)]">Hồ Tấn Đạt</h3>
+                                        <span class="text-xs uppercase text-[var(--gray-600)]">Quản lý quỹ</span>
+                                    </div>
+                                    <p class="text-[#444]">15 năm kinh nghiệm trong đầu tư và quản lý tài sản
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </section>
                 </div>
                 <div>
                     <div class="border border-gray-300 p-6">
-                        <h3 class="mb-4 font-semibold uppercase tracking-wider text-gray-800">Fund Details</h3>
+                        <h3 class="mb-4 font-semibold uppercase tracking-wider text-gray-800">Thông tin chung</h3>
                         <dl class="space-y-3 text-[14px]">
                             @if($fund->name)
                                 <div class="flex justify-between border-b border-gray-300 py-3">
-                                    <dt class="text-gray-400 uppercase font-semibold">Fund Name</dt>
+                                    <dt class="text-gray-400 uppercase font-semibold">Tên quỹ</dt>
                                     <dd class="font-medium text-gray-900">{{ $fund->name }}</dd>
                                 </div>
                             @endif
                             @if($fund->inception_date)
                                 <div class="flex justify-between border-b border-gray-300 py-3">
-                                    <dt class="text-gray-400 uppercase font-semibold">Inception Date</dt>
+                                    <dt class="text-gray-400 uppercase font-semibold">Ngày thành lập</dt>
                                     <dd class="font-medium text-gray-900">
                                         {{ $fund->inception_date?->format('d/m/Y') ?? '-' }}
                                     </dd>
@@ -99,41 +142,48 @@
                             @endif
                             @if($fund->fund_type)
                                 <div class="flex justify-between border-b border-gray-300 py-3">
-                                    <dt class="text-gray-400 uppercase font-semibold">Fund Type</dt>
+                                    <dt class="text-gray-400 uppercase font-semibold">Loại quỹ</dt>
                                     <dd class="font-medium text-gray-900">{{ $fund->fund_type }}</dd>
                                 </div>
                             @endif
                             @if($fund->asset_class)
                                 <div class="flex justify-between border-b border-gray-300 py-3">
-                                    <dt class="text-gray-400 uppercase font-semibold">Asset Class</dt>
+                                    <dt class="text-gray-400 uppercase font-semibold">Loại tài sản</dt>
                                     <dd class="font-medium text-gray-900">{{ $fund->asset_class }}</dd>
                                 </div>
                             @endif
                             @if($fund->strategy)
                                 <div class="flex justify-between border-b border-gray-300 py-3">
-                                    <dt class="text-gray-400 uppercase font-semibold">Strategy</dt>
+                                    <dt class="text-gray-400 uppercase font-semibold">Chiến lược</dt>
                                     <dd class="font-medium text-gray-900">{{ $fund->strategy }}</dd>
                                 </div>
                             @endif
                             @if($fund->suggested_investment_time)
                                 <div class="flex justify-between border-b border-gray-300 py-3">
-                                    <dt class="text-gray-400 uppercase font-semibold">Suggested Investment Time</dt>
+                                    <dt class="text-gray-400 uppercase font-semibold">Đề xuất thời gian đầu tư</dt>
                                     <dd class="font-medium text-gray-900">{{ $fund->suggested_investment_time }}</dd>
                                 </div>
                             @endif
                             @if($fund->subscription_fee)
                                 <div class="flex justify-between border-b border-gray-300 py-3">
-                                    <dt class="text-gray-400 uppercase font-semibold">Subscription Fee</dt>
+                                    <dt class="text-gray-400 uppercase font-semibold">Phí mua</dt>
                                     <dd class="font-medium text-gray-900">{{ $fund->subscription_fee }}</dd>
                                 </div>
                             @endif
                             @if($fund->management_fee)
                                 <div class="flex justify-between py-3">
-                                    <dt class="text-gray-400 uppercase font-semibold">Management Fee</dt>
+                                    <dt class="text-gray-400 uppercase font-semibold">Phí quản lý</dt>
                                     <dd class="font-medium text-gray-900">{{ $fund->management_fee }}</dd>
                                 </div>
                             @endif
                         </dl>
+
+                        <div class="text-center my-5">
+                            <a href="{{ route('funds.nav-history', $fund->slug) }}"
+                                class="text-[12px] uppercase text-[var(--color-red)] hover:underline">
+                                Xem lịch sử NAV →
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -160,6 +210,34 @@
                 @php
                     $latest = $fund->performances->sortByDesc('date')->first();
                     $sorted = $fund->performances->sortBy('date');
+
+                    // Benchmark data kỳ gần nhất, keyed by benchmark_id
+                    $latestBenchmarkMap = $latest->benchmarkPerformances->keyBy('benchmark_id');
+
+                    // Chuẩn bị chart datasets
+                    $benchmarkColors = ['#2b6cbbff', '#008e4e', '#cc0000', '#d9ab06ff'];
+                    $chartDatasets = [];
+                    // Dataset fund
+                    $chartDatasets[] = [
+                        'label' => $fund->name,
+                        'data' => $sorted->map(fn($p) => $p->one_month !== null ? (float) $p->one_month : null)->values(),
+                        'borderColor' => '#0a0a0a',
+                        'bgColor' => '#0a0a0a',
+                        'dashed' => false,
+                    ];
+                    // Datasets benchmark động
+                    foreach ($fund->benchmarks as $bi => $bm) {
+                        $chartDatasets[] = [
+                            'label' => $bm->name,
+                            'data' => $sorted->map(function ($p) use ($bm) {
+                                $bp = $p->benchmarkPerformances->firstWhere('benchmark_id', $bm->id);
+                                return $bp && $bp->one_month !== null ? (float) $bp->one_month : null;
+                            })->values(),
+                            'borderColor' => $benchmarkColors[$bi % count($benchmarkColors)],
+                            'bgColor' => $benchmarkColors[$bi % count($benchmarkColors)],
+                            'dashed' => true,
+                        ];
+                    }
                 @endphp
 
                 {{-- ── Benchmark Comparison Table (latest period) ──────── --}}
@@ -178,71 +256,37 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200">
-                                @php
-                                    $benchmarkRows = [
-                                        [
-                                            'label' => $fund->name,
-                                            'bold' => true,
-                                            'nav' => $latest->nav,
-                                            '1m' => $latest->one_month,
-                                            '3m' => $latest->three_month,
-                                            '1y' => $latest->one_year,
-                                            '3y' => $latest->three_year,
-                                            'ytd' => $latest->ytd,
-                                        ],
-                                        [
-                                            'label' => 'VN-Index',
-                                            'bold' => true,
-                                            'nav' => $latest->vn_index_nav,
-                                            '1m' => $latest->vn_index_one_month,
-                                            '3m' => $latest->vn_index_three_month,
-                                            '1y' => $latest->vn_index_one_year,
-                                            '3y' => $latest->vn_index_three_year,
-                                            'ytd' => $latest->vn_index_ytd,
-                                        ],
-                                        [
-                                            'label' => 'Dragon - DCDS',
-                                            'bold' => true,
-                                            'nav' => $latest->dcds_nav,
-                                            '1m' => $latest->dcds_one_month,
-                                            '3m' => $latest->dcds_three_month,
-                                            '1y' => $latest->dcds_one_year,
-                                            '3y' => $latest->dcds_three_year,
-                                            'ytd' => $latest->dcds_ytd,
-                                        ],
-                                        [
-                                            'label' => 'Vina - VESAF',
-                                            'bold' => true,
-                                            'nav' => $latest->vesaf_nav,
-                                            '1m' => $latest->vesaf_one_month,
-                                            '3m' => $latest->vesaf_three_month,
-                                            '1y' => $latest->vesaf_one_year,
-                                            '3y' => $latest->vesaf_three_year,
-                                            'ytd' => $latest->vesaf_ytd,
-                                        ],
-                                    ];
-                                @endphp
-
-                                @foreach($benchmarkRows as $row)
-                                    <tr class="hover:bg-gray-50/60 transition-colors">
+                                {{-- Fund row --}}
+                                <tr class="hover:bg-gray-50/60 transition-colors">
+                                    <td class="px-6 py-4 font-semibold text-gray-900">{{ $fund->name }}</td>
+                                    <td class="px-6 py-4 font-normal text-right text-gray-700">
+                                        {{ $latest->nav !== null ? number_format((float) $latest->nav, 2, ',', '.') : '-' }}
+                                    </td>
+                                    @foreach(['one_month', 'three_month', 'one_year', 'three_year', 'ytd'] as $col)
+                                        @php $v = $latest->$col; @endphp
                                         <td
-                                            class="px-6 py-4 {{ $row['bold'] ? 'font-semibold text-gray-900' : 'text-gray-600' }}">
-                                            {{ $row['label'] }}
+                                            class="px-6 py-4 text-right font-medium {{ $v === null ? 'text-gray-400' : (floatval($v) >= 0 ? 'text-emerald-600' : 'text-[var(--color-red)]') }}">
+                                            @if($v === null) -
+                                            @else {{ floatval($v) >= 0 ? '+' : '' }}{{ number_format(floatval($v), 2) }}%
+                                            @endif
                                         </td>
-                                        {{-- NAV --}}
-                                        <td class="px-6 py-4 text-right text-gray-700 tabular-nums">
-                                            {{ $row['nav'] !== null ? number_format((float) $row['nav'], 2, ',', '.') : '–' }}
+                                    @endforeach
+                                </tr>
+
+                                {{-- Dynamic benchmark rows --}}
+                                @foreach($fund->benchmarks as $bm)
+                                    @php $bp = $latestBenchmarkMap->get($bm->id); @endphp
+                                    <tr class="hover:bg-gray-50/60 transition-colors">
+                                        <td class="px-6 py-4 font-semibold text-gray-900">{{ $bm->name }}</td>
+                                        <td class="px-6 py-4 font-normal text-right text-gray-700">
+                                            {{ $bp && $bp->nav !== null ? number_format((float) $bp->nav, 2, ',', '.') : '-' }}
                                         </td>
-                                        {{-- Return columns --}}
-                                        @foreach(['1m', '3m', '1y', '3y', 'ytd'] as $col)
-                                            @php $v = $row[$col]; @endphp
+                                        @foreach(['one_month', 'three_month', 'one_year', 'three_year', 'ytd'] as $col)
+                                            @php $v = $bp ? $bp->$col : null; @endphp
                                             <td
-                                                class="px-6 py-4 text-right tabular-nums font-medium
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            {{ $v === null ? 'text-gray-300' : (floatval($v) >= 0 ? 'text-emerald-600' : 'text-red-500') }}">
-                                                @if($v === null)
-                                                    -
-                                                @else
-                                                    {{ floatval($v) >= 0 ? '+' : '' }}{{ number_format(floatval($v), 2) }}%
+                                                class="px-6 py-4 text-right font-medium {{ $v === null ? 'text-gray-400' : (floatval($v) >= 0 ? 'text-emerald-600' : 'text-[var(--color-red)]') }}">
+                                                @if($v === null) -
+                                                @else {{ floatval($v) >= 0 ? '+' : '' }}{{ number_format(floatval($v), 2) }}%
                                                 @endif
                                             </td>
                                         @endforeach
@@ -252,21 +296,12 @@
                         </table>
                     </div>
                 </div>
-
-                {{-- ── Line Chart ────────────── --}}
+                {{-- ── Line Chart (dynamic datasets) ── --}}
                 <div class="mt-20 p-6">
-                    @php
-                        $chartLabels = $sorted->map(fn($p) => $p->date->format('m/Y'))->values()->toJson();
-                        $fundYtd = $sorted->map(fn($p) => $p->one_month !== null ? (float) $p->one_month : null)->values()->toJson();
-                        $vnYtd = $sorted->map(fn($p) => $p->vn_index_one_month !== null ? (float) $p->vn_index_one_month : null)->values()->toJson();
-                        $dcdsYtd = $sorted->map(fn($p) => $p->dcds_one_month !== null ? (float) $p->dcds_one_month : null)->values()->toJson();
-                        $vesafYtd = $sorted->map(fn($p) => $p->vesaf_one_month !== null ? (float) $p->vesaf_one_month : null)->values()->toJson();
-                    @endphp
-
                     <div class="relative h-80">
-                        <canvas id="performanceChart" data-labels="{{ $chartLabels }}" data-fund="{{ $fundYtd }}"
-                            data-fund-label="{{ $fund->name ?? '' }}" data-vn="{{ $vnYtd }}" data-dcds="{{ $dcdsYtd }}"
-                            data-vesaf="{{ $vesafYtd }}">
+                        <canvas id="performanceChart"
+                            data-labels="{{ $sorted->map(fn($p) => $p->date->format('m/Y'))->values()->toJson() }}"
+                            data-datasets="{{ collect($chartDatasets)->toJson() }}">
                         </canvas>
                     </div>
                 </div>
@@ -303,12 +338,12 @@
                         <button
                             class="portfolio-tab bg-gray-900 px-6 py-2 text-[11px] font-medium uppercase tracking-[0.12em] text-white transition"
                             data-tab="sector">
-                            Theo Ngành
+                            {{ $fund->slug === 'imperial-capital' ? 'Ngành' : 'Crypto' }}
                         </button>
                         <button
                             class="portfolio-tab bg-transparent px-6 py-2 text-[11px] font-medium uppercase tracking-[0.12em] text-gray-500 transition hover:bg-gray-50"
                             data-tab="asset">
-                            Theo Loại Tài Sản
+                            {{ $fund->slug === 'imperial-capital' ? 'Loại Tài Sản' : 'Ngành' }}
                         </button>
                     </div>
                 </div>
@@ -361,7 +396,7 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200">
-                                @foreach($fund->portfolios->sortByDesc('weight') as $holding)
+                                @foreach($fund->portfolios->sortByDesc('weight')->where('company_name', '<>', null) as $holding)
                                     <tr class="transition hover:bg-gray-50/60">
                                         <td class="px-6 py-4">
                                             <div class="text-sm font-semibold text-gray-900">{{ $holding->company_name }}</div>
@@ -388,32 +423,32 @@
         {{-- Documents Section --}}
         <section id="documents" class="scroll-mt-40 border-t border-gray-200 py-16">
 
-            <h2 class="text-[40px] font-bold text-gray-900" style="font-family: var(--font-display);">Documents</h2>
+            <h2 class="text-[40px] font-bold text-gray-900" style="font-family: var(--font-display);">Tài liệu</h2>
 
             {{-- Tabs --}}
             <div class="mt-8 flex flex-wrap border-b border-gray-200">
                 <button
-                    class="doc-tab border-b border-red-600 bg-white px-5 py-2 text-sm font-medium text-red-600 transition hover:border-red-500 hover:text-red-600"
+                    class="doc-tab border-b border-[var(--color-red)] bg-white px-5 py-2 text-sm font-medium text-[var(--color-red)] transition hover:border-red-500 hover:text-[var(--color-red)]"
                     data-tab="all">
-                    All
+                    Tất cả
                 </button>
 
                 <button
-                    class="doc-tab bg-white px-5 py-2 text-sm font-medium text-gray-600 transition hover:border-red-500 hover:text-red-600"
+                    class="doc-tab bg-white px-5 py-2 text-sm font-medium text-gray-600 transition hover:border-red-500 hover:text-[var(--color-red)]"
                     data-tab="factsheet">
                     Factsheet
                 </button>
 
                 <button
-                    class="doc-tab bg-white px-5 py-2 text-sm font-medium text-gray-600 transition hover:border-red-500 hover:text-red-600"
+                    class="doc-tab bg-white px-5 py-2 text-sm font-medium text-gray-600 transition hover:border-red-500 hover:text-[var(--color-red)]"
                     data-tab="prospectus">
-                    Prospectus
+                    Bản cáo bạch & Điều lệ
                 </button>
 
                 <button
-                    class="doc-tab bg-white px-5 py-2 text-sm font-medium text-gray-600 transition hover:border-red-500 hover:text-red-600"
+                    class="doc-tab bg-white px-5 py-2 text-sm font-medium text-gray-600 transition hover:border-red-500 hover:text-[var(--color-red)]"
                     data-tab="monthly">
-                    Monthly Report
+                    Báo cáo tháng
                 </button>
             </div>
 
@@ -440,9 +475,9 @@
                         </div>
 
                         <a href="{{ asset('storage/' . $doc->file) }}" target="_blank"
-                            class="border border-gray-300 text-red-600 px-4 py-2 text-sm font-medium transition hover:bg-red-600 hover:text-white">
+                            class="border border-gray-300 text-[var(--color-red)] px-4 py-2 text-sm font-medium transition hover:bg-[var(--color-red)] hover:text-white">
 
-                            Download
+                            Tải xuống
 
                         </a>
 
@@ -450,15 +485,15 @@
 
                 @empty
 
-                    <div class="rounded-xl border border-dashed border-gray-200 py-12 text-center text-sm text-gray-400">
-                        No documents available.
+                    <div class="py-12 text-center text-sm text-gray-400">
+                        Chưa có tài liệu.
                     </div>
 
                 @endforelse
 
                 <div id="emptyState"
                     class="{{ $fund->documents->count() ? 'hidden' : '' }} py-12 text-center text-sm text-gray-400">
-                    No documents available.
+                    Chưa có tài liệu.
                 </div>
 
             </div>
@@ -484,144 +519,71 @@
                     }
 
                     document.querySelectorAll('.tab-link').forEach(l => {
-                        l.classList.remove('border-red-600', 'text-red-700');
+                        l.classList.remove('border-[var(--color-red)]', 'text-[var(--color-red)]');
                         l.classList.add('border-transparent', 'text-gray-500');
                     });
 
-                    this.classList.add('border-red-600', 'text-red-700');
+                    this.classList.add('border-[var(--color-red)]', 'text-[var(--color-red)]');
                     this.classList.remove('border-transparent', 'text-gray-500');
                 });
             });
 
-            // ── Performance Chart ─────────────────────────────────────
+            // ── Performance Chart (dynamic benchmarks) ───────────────────
             (function () {
-
                 const canvas = document.getElementById('performanceChart');
                 if (!canvas) return;
 
-                const labels = JSON.parse(canvas.dataset.labels);
-                const fund = JSON.parse(canvas.dataset.fund);
-                const vn = JSON.parse(canvas.dataset.vn);
-                const dcds = JSON.parse(canvas.dataset.dcds);
-                const vesaf = JSON.parse(canvas.dataset.vesaf);
+                const labels = JSON.parse(canvas.dataset.labels || '[]');
+                const rawSets = JSON.parse(canvas.dataset.datasets || '[]');
 
-                const ctx = canvas.getContext('2d');
+                const datasets = rawSets.map((d) => ({
+                    label: d.label,
+                    data: d.data,
+                    borderColor: d.borderColor,
+                    backgroundColor: d.bgColor,
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    pointHoverRadius: 0,
+                    tension: 0.35,
+                }));
 
-                new Chart(ctx, {
+                new Chart(canvas.getContext('2d'), {
                     type: 'line',
-
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: canvas.dataset.fundLabel,
-                            data: fund,
-                            borderColor: '#0a0a0a',
-                            backgroundColor: '#0a0a0a',
-                            borderWidth: 2,
-                            pointRadius: 0,
-                            pointHoverRadius: 0,
-                            tension: 0.35,
-                        },
-                        {
-                            label: 'VN-Index',
-                            data: vn,
-                            borderColor: '#9e9b96',
-                            backgroundColor: '#9e9b96',
-                            borderWidth: 2,
-                            borderDash: [5, 5],
-                            pointRadius: 0,
-                            pointHoverRadius: 0,
-                            tension: 0.35,
-                        },
-                        {
-                            label: 'Dragon-DCDS',
-                            data: dcds,
-                            borderColor: '#008e4e',
-                            backgroundColor: '#008e4e',
-                            borderWidth: 2,
-                            pointRadius: 0,
-                            pointHoverRadius: 0,
-                            tension: 0.35,
-                        },
-                        {
-                            label: 'Vina-VESAF',
-                            data: vesaf,
-                            borderColor: '#cc0000',
-                            backgroundColor: '#cc0000',
-                            borderWidth: 2,
-                            pointRadius: 0,
-                            pointHoverRadius: 0,
-                            tension: 0.35,
-                        }
-                        ]
-                    },
-
+                    data: { labels, datasets },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-
-                        interaction: {
-                            mode: 'index',
-                            intersect: false
-                        },
-
+                        interaction: { mode: 'index', intersect: false },
                         plugins: {
                             legend: {
                                 display: true,
                                 position: 'top',
                                 align: 'start',
-
                                 labels: {
                                     usePointStyle: true,
                                     pointStyle: 'line',
                                     boxWidth: 25,
                                     boxHeight: 25,
                                     padding: 24,
-
                                     color: '#374151',
-
-                                    font: {
-                                        family: "'Inter', sans-serif",
-                                        size: 13,
-                                        weight: '600'
-                                    }
+                                    font: { family: "'Inter', sans-serif", size: 13, weight: '600' }
                                 }
                             },
-
                             tooltip: {
                                 callbacks: {
-                                    label(context) {
-                                        return `${context.dataset.label}: ${context.parsed.y}%`;
-                                    }
+                                    label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y !== null ? ctx.parsed.y + '%' : '-'}`
                                 }
                             }
                         },
-
                         scales: {
-                            x: {
-                                grid: {
-                                    color: 'rgba(0,0,0,0.05)'
-                                },
-                                ticks: {
-                                    color: '#6b7280'
-                                }
-                            },
-
+                            x: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { color: '#6b7280' } },
                             y: {
-                                grid: {
-                                    color: 'rgba(0,0,0,0.05)'
-                                },
-                                ticks: {
-                                    color: '#6b7280',
-                                    callback(value) {
-                                        return value + '%';
-                                    }
-                                }
+                                grid: { color: 'rgba(0,0,0,0.05)' },
+                                ticks: { color: '#6b7280', callback: (v) => v + '%' }
                             }
                         }
                     }
                 });
-
             })();
 
             // ── Documents Tab Logic ────────────────────────────────────────
@@ -637,9 +599,9 @@
 
                         tabs.forEach(btn => {
                             btn.classList.remove(
-                                'text-red-600',
+                                'text-[var(--color-red)]',
                                 'border-b',
-                                'border-red-600'
+                                'border-[var(--color-red)]'
                             );
 
                             btn.classList.add(
@@ -652,9 +614,9 @@
                         );
 
                         tab.classList.add(
-                            'text-red-600',
+                            'text-[var(--color-red)]',
                             'border-b',
-                            'border-red-600'
+                            'border-[var(--color-red)]'
                         );
 
                         const category = tab.dataset.tab;
@@ -698,7 +660,7 @@
                 };
 
                 // Palette logic
-                const colors = ['#dc2626', '#1f2937', '#6b7280', '#9ca3af', '#d1d5db', '#e5e7eb', '#f3f4f6'];
+                const colors = ['#dc2626', '#1f2937', '#6b7280', '#9ca3af', '#d1d5db', '#e5e7eb', '#f3f4f6', '#f3f4f6', '#f3f4f6', '#f3f4f6', '#f3f4f6', '#f3f4f6'];
 
                 let activeSegment = null;
                 let currentType = 'sector';
@@ -773,7 +735,7 @@
                         row.innerHTML = `
                             <div class="flex items-center gap-3">
                                 <span class="block h-2 w-2 rounded-full" style="background-color: ${color}"></span>
-                                <span class="text-[13px] text-gray-700 group-hover:text-red-600 transition">${item.name}</span>
+                                <span class="text-[13px] text-gray-700 group-hover:text-[var(--color-red)] transition">${item.name}</span>
                             </div>
                             <span class="text-[13px] font-medium text-gray-900">${item.value}%</span>
                         `;

@@ -1,6 +1,6 @@
 <div class="p-10 border-r border-y border-gray-300 last:border-r-0">
 
-    <p class="text-[14px] font-semibold uppercase tracking-[0.15em] text-red-600">
+    <p class="text-[14px] font-semibold uppercase tracking-[0.15em] text-[var(--color-red)]">
         {{ $label }}
     </p>
 

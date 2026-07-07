@@ -3,7 +3,7 @@
 
           {{-- Logo --}}
           <a href="{{ route('home') }}"
-               class="text-lg font-semibold uppercase tracking-[0.3em] text-gray-900 transition hover:text-red-700">
+               class="text-sm font-normal uppercase tracking-[0.1em] text-gray-900 transition hover:text-[var(--color-red)]">
                Imperial Capital
           </a>
 
@@ -14,11 +14,9 @@
                     @foreach($funds as $fund)
 
                          <li>
-                              <a href="{{ route('funds.show', $fund->slug) }}"
-                                   class="text-xs font-semibold uppercase tracking-[0.18em] text-gray-700 transition hover:text-red-700">
-
+                              <a href="{{ route('funds.show', $fund->slug) }}" class="text-xs font-semibold uppercase tracking-[0.18em] transition hover:text-[var(--color-red)] 
+                                 {{ request()->is('funds/' . $fund->slug) ? 'text-[var(--color-red)]' : 'text-gray-700' }}">
                                    {{ $fund->name }}
-
                               </a>
                          </li>
 
@@ -33,13 +31,14 @@
                {{-- Language --}}
                <div class="flex items-center gap-2 border-r border-gray-200 pr-6">
 
-                    <button class="text-xs font-semibold uppercase tracking-widest text-red-700">
+                    <button class="text-xs font-semibold uppercase tracking-widest text-[var(--color-red)]">
                          VI
                     </button>
 
                     <span class="text-gray-300">/</span>
 
-                    <button class="text-xs font-semibold uppercase tracking-widest text-gray-500 hover:text-red-700">
+                    <button
+                         class="text-xs font-semibold uppercase tracking-widest text-gray-500 hover:text-[var(--color-red)]">
                          EN
                     </button>
 
