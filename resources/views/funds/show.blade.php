@@ -24,7 +24,8 @@
                     @endphp
 
                     @if($latestDoc)
-                        <a href="{{ asset('storage/' . $latestDoc->files->last()) }}" target="_blank"
+                        <a href="{{ ($latestDoc->files && $latestDoc->files->last()) ? asset('storage/' . $latestDoc->files->last()) : '#' }}"
+                            target="_blank"
                             class="inline-block text-[11px] uppercase tracking-widest text-[var(--color-red)] font-bold no-underline border-b border-[var(--color-red)] pb-1 text-right transition duration-300 ease-in-out hover:-translate-y-1">
                             Tải xuống {{ $latestDoc->title }} →
                         </a>
@@ -106,7 +107,7 @@
                         <div class="mt-10 flex flex-col gap-8">
 
                             <div class="flex items-center gap-5 border-b border-gray-200 last:border-b-0 pb-5">
-                                <img src="{{ asset('images/ql.jpg') }}" class="h-20 w-20 rounded-full object-cover">
+                                <img src="/storage/images/ql.jpg" class="h-20 w-20 rounded-full object-cover">
 
                                 <div class="flex-1">
                                     <div class="mb-1.5 flex items-center gap-3">
