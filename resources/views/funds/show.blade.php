@@ -24,8 +24,7 @@
                     @endphp
 
                     @if($latestDoc)
-                        <a href="{{ ($latestDoc->files && $latestDoc->files->last()) ? asset('storage/' . $latestDoc->files->last()) : '#' }}"
-                            target="_blank"
+                        <a href="{{ asset('storage/' . $latestDoc->files) }}" target="_blank"
                             class="inline-block text-[11px] uppercase tracking-widest text-[var(--color-red)] font-bold no-underline border-b border-[var(--color-red)] pb-1 text-right transition duration-300 ease-in-out hover:-translate-y-1">
                             Tải xuống {{ $latestDoc->title }} →
                         </a>
